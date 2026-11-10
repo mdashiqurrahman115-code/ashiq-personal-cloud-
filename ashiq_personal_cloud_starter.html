@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>ASHIQ PERSONAL CLOUD</title>
+<style>
+:root{--bg:#0d1422;--panel:#17243a;--panel2:#20324e;--text:#f4f7fc;--muted:#a9b9d0;--blue:#79aaff;--line:#2b3d58}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0d1422,#14243c);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:22px max(18px,calc((100% - 1000px)/2));background:#111d30;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:13px;background:#3159a5;display:grid;place-items:center;font-size:23px}
+.brand{font-weight:800;letter-spacing:.5px}.sub{color:var(--muted);font-size:12px}
+main{max-width:1000px;margin:auto;padding:22px 16px 50px}
+.hero{padding:25px;border:1px solid var(--line);border-radius:23px;background:linear-gradient(120deg,#203a61,#17243a);display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.avatar{width:72px;height:72px;border-radius:50%;background:#466b9e;display:grid;place-items:center;font-size:30px}
+h1{font-size:clamp(25px,5vw,38px);margin:0 0 7px}.muted{color:var(--muted)}.pill{border:1px solid #5278a8;border-radius:30px;padding:7px 12px;font-size:12px;color:#d5e5ff}
+h2{font-size:18px;margin:26px 0 13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.tile,.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:17px}
+.tile .ico{font-size:25px;margin-bottom:10px}.tile b{display:block}.tile small{color:var(--muted)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:17px}
+button,.filelabel{border:0;border-radius:12px;background:#315fa8;color:white;padding:11px 15px;font-weight:650;cursor:pointer}
+button.secondary{background:#2a3c57}input,textarea{width:100%;background:#0f1a2b;color:var(--text);border:1px solid var(--line);border-radius:11px;padding:12px;margin:7px 0 12px}
+textarea{min-height:100px;resize:vertical}.filelist{display:grid;gap:9px;margin-top:12px}.fileitem{padding:11px;background:#0f1a2b;border:1px solid var(--line);border-radius:10px;overflow-wrap:anywhere}
+.preview{max-width:100%;max-height:260px;border-radius:12px;margin-top:10px}.warning{border-left:4px solid #e4b45d;background:#352d20;padding:13px;border-radius:10px;color:#f8e8c9;font-size:13px;line-height:1.5}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
+</style>
+</head>
+<body>
+<header><div class="logo">☁</div><div><div class="brand">ASHIQ PERSONAL CLOUD</div><div class="sub">Your personal digital space</div></div></header>
+<main>
+<section class="hero">
+ <div class="avatar">AR</div>
+ <div style="flex:1;min-width:190px"><h1>Welcome Home</h1><div class="muted">Md Ashiqur Rahman · Personal dashboard</div></div>
+ <span class="pill">PHONE EDITION · DEMO</span>
+</section>
+<h2>My digital space</h2>
+<section class="grid">
+ <div class="tile"><div class="ico">📄</div><b>PDF documents</b><small>Study and records</small></div>
+ <div class="tile"><div class="ico">🖼️</div><b>Photos</b><small>Personal pictures</small></div>
+ <div class="tile"><div class="ico">🎬</div><b>Videos</b><small>Video collection</small></div>
+ <div class="tile"><div class="ico">📝</div><b>Personal notes</b><small>Ideas and writing</small></div>
+ <div class="tile"><div class="ico">📁</div><b>My files</b><small>Documents and more</small></div>
+ <div class="tile"><div class="ico">🔐</div><b>Private vault</b><small>Secure storage setup needed</small></div>
+</section>
+<h2>Choose files to preview on this phone</h2>
+<section class="panel">
+ <p class="muted" style="margin-top:0">Select files from your Android device. This demo previews files in this browser tab; it does not upload or back them up.</p>
+ <input id="files" type="file" multiple accept="image/*,video/*,.pdf,.txt,.doc,.docx,.xls,.xlsx">
+ <div id="filelist" class="filelist"></div>
+</section>
+<h2>Quick personal note</h2>
+<section class="panel">
+ <textarea id="note" placeholder="Write a note for this session..."></textarea>
+ <div class="actions"><button id="save">Save note on this device</button><button class="secondary" id="clear">Clear note</button></div>
+ <p class="sub" id="status" aria-live="polite">Notes are stored only in this browser's local storage. Do not use this demo for sensitive information.</p>
+</section>
+<div class="warning" style="margin-top:18px"><b>Privacy notice:</b> This is a front-end starter demo, not a finished secure cloud. It has no real account login, server, encrypted vault, or cloud backup. Files selected here are only previewed in your browser session. Do not publish private files, passwords, ID documents, or personal photos to a public website repository.</div>
+</main>
+<footer>ASHIQ PERSONAL CLOUD · Private by design requires secure backend setup</footer>
+<script>
+const input=document.getElementById('files'), list=document.getElementById('filelist');
+let urls=[];
+input.addEventListener('change',()=>{urls.forEach(URL.revokeObjectURL);urls=[];list.innerHTML='';
+ [...input.files].forEach(f=>{const item=document.createElement('div');item.className='fileitem';const name=document.createElement('div');name.textContent=f.name+' · '+(f.size/1024/1024).toFixed(2)+' MB';item.append(name);
+ if(f.type.startsWith('image/')){const im=document.createElement('img');const u=URL.createObjectURL(f);urls.push(u);im.src=u;im.className='preview';item.append(im)}
+ else if(f.type.startsWith('video/')){const v=document.createElement('video');const u=URL.createObjectURL(f);urls.push(u);v.src=u;v.controls=true;v.className='preview';item.append(v)}
+ else if(f.type==='application/pdf'){const a=document.createElement('a');a.href=URL.createObjectURL(f);urls.push(a.href);a.target='_blank';a.rel='noopener';a.textContent='Open PDF';a.style.color='#9ec5ff';item.append(a)}
+ list.append(item)});
+});
+const note=document.getElementById('note'), status=document.getElementById('status');
+document.getElementById('save').onclick=()=>{try{localStorage.setItem('ashiq-cloud-demo-note',note.value);status.textContent='Saved in this browser on this device.'}catch(e){status.textContent='Could not save note in browser storage.'}};
+document.getElementById('clear').onclick=()=>{note.value='';localStorage.removeItem('ashiq-cloud-demo-note');status.textContent='Note cleared from this browser.'};
+try{note.value=localStorage.getItem('ashiq-cloud-demo-note')||''}catch(e){}
+</script>
+</body></html>
